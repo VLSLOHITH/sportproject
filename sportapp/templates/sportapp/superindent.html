@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="../../static/style.css">
+<link rel="stylesheet" type="text/css" href="../../static/sidebar.css">
+<!-- <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> -->
+
+</head>
+<body>
+ 
+<div class="sidenav">
+     
+    <a href="{% url 'clubsList' %}">Secys</a>
+    <a href="{% url 'superindent' 0 %}" >Pending Requests</a>
+    {% if clubs_list %}
+    {% for club in clubs_list %}
+  <button class="dropdown-btn">{{club.name}} 
+    <i class="fa fa-caret-down"></i>
+  </button>
+  <div class="dropdown-container">
+    <a href="{% url 'equipmentsList' club.pk %}">Register stock</a>
+    <a href="{% url 'IssueList' club.pk %}">Issue History</a>
+  </div>
+  {% endfor %}   
+  {% endif %}
+     <button class="dropdown-btn">General items 
+    <i class="fa fa-caret-down"></i>
+  </button>
+  <div class="dropdown-container">
+     <a href="{% url 'general' %}">Register stock</a>
+    <a href="{% url 'generalIssueList'   %}">Issue History</a>
+  </div>
+ 
+    <a href="{% url 'total_list' %}"> Total Issues </a> 
+   
+ <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
+</div>
+
+<div class="main">
+
+  
+  <div class="header"><h1>Requests</h1>
+    <span>
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="search here..." title="Type in a name">
+    </span>
+    <hr style="width:100%", size="3", color=black> 
+  </div>
+
+
+  {% for message in messages %}
+<div class="alert {{ message.tags }} alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+   For ID number: {{id}} <br>
+   {{ message | safe }}
+</div>
+{% endfor %}
+    {% if iss %}
+    <table style="width:100%" class="styled-table" id="myTable">
+      <thead>
+        <tr>
+         <th>sno</th> 
+          <th>Id</th>
+          <th>equipment club</th>
+          <th>club_secy name</th>
+            <th>equipment Name</th>
+            <th>specification</th>
+            <th>Quantity</th>
+            <th>Date</th>
+            <th>status</th>
+            <th>accept</th>
+            <th>deny</th>
+          </tr>
+      </thead>
+      <tbody>
+      {% for obj in iss %}
+      <tr>
+        
+         <td></td> 
+        <td>{{obj.id}}</td>
+        {%if obj.equipment_name %}
+        <td>{{obj.equipment_name.sport.name}}</td>
+        {%else %}
+        <td>General</td>
+        {% endif %}
+        {% if obj.is_gen%}
+        <td>General Secy</td>
+        {% else %}
+        <td> {{obj.user.secy_name}}    </td>
+        {% endif %}
+        {%if obj.equipment_name %}
+        <td>{{obj.equipment_name.name}}</td>
+        <td>{{obj.equipment_name.specification}}</td>
+        {%else %}
+        <td>{{obj.general_equipname.name}}</td>
+        <td>{{obj.general_equipname.specification}}</td>
+        {% endif %}
+        <td>{{obj.quantity}}</td>
+        <td>{{obj.date}}</td>
+        {% if obj.is_return%}
+        <td>return request</td>
+        {%else%}
+        <td>issue request</td>
+        {% endif %}
+        <td><a href="{% url 'accept' obj.pk %}"><button class="greenb">accept</button></td>
+        <td><a href="{% url 'deny' obj.pk %}"><button class="redb">deny</button></td>        
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+  {% else %}
+    <p>There are no Pending Requests </p>
+  {% endif %} 
+</div>
+
+<script src="../../static/superindent_page_search.js">
+  </script>
+<script src="../../static/sidebar.js">
+</script>
+
+</body>
+</html> 
+

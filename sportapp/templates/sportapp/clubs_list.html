@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head> 
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="../../static/style.css">
+<link rel="stylesheet" type="text/css" href="../../static/sidebar.css">
+</head>
+<body> 
+
+<div class="sidenav">
+    {% if gensec or super%}
+    <a  href="{% url 'clubsList' %}" >Secys</a>
+    {% endif %}
+    {% if super%}
+    <a href="{% url 'superindent' 0 %}" >Pending Requests</a>
+    {% endif %}
+    {% if clubs_list %}
+    {% for club in clubs_list %}
+      <button class="dropdown-btn">{{club.name}} 
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-container">
+          <a href="{% url 'equipmentsList' club.pk %}" class="a">Register stock</a>
+          <a href="{% url 'IssueList' club.pk %}" class="a">Issue History</a>
+      </div>
+    {% endfor %}   
+    {% endif %}
+     <button class="dropdown-btn">General items 
+    <i class="fa fa-caret-down"></i>
+  </button>
+  <div class="dropdown-container">
+     <a href="{% url 'general' %}">Register stock</a>
+    <a href="{% url 'generalIssueList'   %}">Issue History</a>
+  </div>
+   {% if gensec %}
+  <a href="{% url 'gensecissuelist' %}"> My_issues</a> 
+  {% endif %} 
+  {% if  super  %}
+    <a href="{% url 'total_list' %}"> Total Issues </a> 
+    {% endif %}
+
+ <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
+</div>
+
+<div class="main">
+    <div class="header"><h1>Clubs list</h1>
+      <span>
+        <a href="{% url 'clubs' %}" class="myButton">Add Clubs</a>
+      </span>
+      <hr style="width:100%", size="3", color=black> 
+    </div>
+
+    {% if clubs_list %}
+        <table style="width:100%" class="styled-table" >
+          <thead>
+            <tr>
+              <th>sno</th>
+              <th>Name</th>
+              <th>Secy Name</th>
+              <th>Program</th>
+              <th>Department</th>
+              <th>Email id</th>
+              <th>Edit</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for club in clubs_list %}
+            <tr>
+              <td></td>
+              <td>{{club.name}}</td>
+              <td>{{club.secy_name}}</td>
+              <td>{{club.prog}}</td>
+              <td>{{club.dept}}</td>
+              <td>{{club.email}}</td>
+              <td><a href="{% url 'editClub' club.pk %}"><button class="grayb">Edit</button></a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    {% else %}
+      <p>There are no Clubs</p>
+    {% endif %} 
+</div>
+
+<script src="../../static/sidebar.js">
+</script>
+
+</body>
+</html> 
+
